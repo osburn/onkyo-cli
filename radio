@@ -1,0 +1,560 @@
+#!/usr/bin/env bash
+#
+# Tim Osburn
+# 220825
+#
+# This requires installation of the octl tool below
+# - https://github.com/janten/onkyo-eiscp-remote-mac
+# My personal setup: TX-8270 192.168.0.24:60128
+#
+
+RADIO=192.168.0.24
+RPORT=60128
+
+if [ $# -eq 0 ]
+  then
+    echo "Usage: `basename "$0"` command"
+fi
+
+# -------------------------------------------------------------
+
+# Turn Radio off
+if [ "$1" == "off" ]
+  then
+    octl PWR00 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Turn radio off
+if [ "$1" == "on" ]
+  then
+    octl PWR01 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# -------------------------------------------------------------
+
+# Toggle on/off A Speaker output
+if [ "$1" == "a" ]
+  then
+    octl SPAUP ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Toggle on/off B Speaker output
+if [ "$1" == "b" ]
+  then
+    octl SPBUP ${RADIO} ${RPORT} > /dev/null &
+fi
+
+
+# Switch the radio to PC input mode
+# Sets a plethora of items, need to add sleep as sending commands to the radio API too fast it get lost
+# Input Selector Command: PC Input (05)
+# Tone Front Bass: +10 (A hex)
+# Tone Front Treble: +10 (A hex)
+# Master Volumn: 60 (78 hex)
+# Display Dimmer: Dim (01)
+# Listening Mode Command: Stereo (00)
+# Sleep: off
+# Speaker A: On
+# Speaker B: On
+# SubVolumn: 0db
+if [ "$1" == "pc" ]
+  then
+    octl SLI05 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRB+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRT+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl MVL78 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl DIM01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl LMD00 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SLPOFF ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPA01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPB01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SWL+00 ${RADIO} ${RPORT} > /dev/null &
+
+fi
+
+# Switch the radio to PC input mode
+# Sets a plethora of items, need to add sleep as sending commands to the radio API too fast it get lost
+# Input Selector Command: PC Input (05)
+# Tone Front Bass: +10 (A hex)
+# Tone Front Treble: +10 (A hex)
+# Master Volumn: 32 (40 hex)
+# Display Dimmer: Dim (01)
+# Listening Mode Command: Stereo (00)
+# Sleep: off
+# Speaker A: On
+# Speaker B: On
+# SubVolumn: 0db
+if [ "$1" == "pcv" ]
+  then
+    octl SLI05 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRB+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRT+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl MVL40 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl DIM01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl LMD00 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SLPOFF ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPA01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPB01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SWL+00 ${RADIO} ${RPORT} > /dev/null &
+
+fi
+
+# Switch the radio to Tuner mode
+if [ "$1" == "tuner" ]
+  then
+    octl SLI26 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRB+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRT+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl MVL40 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPA01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPB01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SWL+00 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Switch the radio to network mode
+if [ "$1" == "net" ]
+  then
+    octl SLI2b ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRB+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl TFRT+A ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl MVL40 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPA01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SPB01 ${RADIO} ${RPORT} > /dev/null &
+    sleep 0.1
+    octl SWL+00 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Turn on Music Optimizer
+if [ "$1" == "opton" ]
+  then
+    octl MOT01 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Turn off Music Optimizer
+if [ "$1" == "optoff" ]
+  then
+    octl MOT00 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Music Optimizer toggle on/off
+if [ "$1" == "opt" ]
+  then
+    octl MOTUP ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# -------------------------------------------------------------
+
+# Mute audio (toggle) wrap around (if on then off, if off then on)
+if [ "$1" == "m" ]
+  then
+    octl AMTTG ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Mute Audio
+if [ "$1" == "mute" ]
+  then
+    octl AMT01 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Unmute Audio
+if [ "$1" == "unmute" ]
+  then
+    octl AMT00 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Sub Volumn level (convert to hex)
+# radio sv - 15
+# radio sv + 12
+if [ "$1" == "sv" ]
+  then
+    DEC=$(echo "obase=10; ${3}*2" | bc)
+    HEX=$(printf '%02x\n' ${DEC})
+    octl SWL${2}${HEX} ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Speaker Volumn
+if [ "$1" == "v" ]
+  then
+    DEC=$(echo "obase=10; ${2}*2" | bc)
+    HEX=$(printf '%02x\n' ${DEC})
+    octl MVL${HEX} ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 00
+if [ "$1" == "v00" ]
+  then
+    octl MVL00 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 10
+if [ "$1" == "v10" ]
+  then
+    octl MVL14 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 20
+if [ "$1" == "v20" ]
+  then
+    octl MVL28 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 30
+if [ "$1" == "v30" ]
+  then
+    octl MVL3c ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 40
+if [ "$1" == "v40" ]
+  then
+    octl MVL50 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 50
+if [ "$1" == "v50" ]
+  then
+    octl MVL64 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 60
+if [ "$1" == "v60" ]
+  then
+    octl MVL78 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 70
+if [ "$1" == "v70" ]
+  then
+    octl MVL8c ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 80
+if [ "$1" == "v80" ]
+  then
+    octl MVLa0 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# Set Speaker Volumn to 90
+if [ "$1" == "max" ]
+  then
+    octl MVLb4 ${RADIO} ${RPORT} > /dev/null &
+fi
+
+# -------------------------------------------------------------
+
+# Increase volumn by 1
+if [ "$1" == "up" ]
+  then
+    for ((i=1;i<=${2};i++))
+      do
+        octl MVLUP1 ${RADIO} ${RPORT} > /dev/null &
+        sleep 0.08
+      done
+fi
+
+# Decrease volumn by 1
+if [ "$1" == "down" ]
+  then
+    for ((i=1;i<=${2};i++))
+      do
+        octl MVLDOWN1 ${RADIO} ${RPORT} > /dev/null &
+        sleep 0.08
+      done
+fi
+
+# -------------------------------------------------------------
+
+
+# manual tuning
+# radio tun 10150 = FM 101.50
+# radio tun 01000 = AM 1000
+
+# change to tuner mode
+if [ "$1" == "tun" ]
+  then
+    octl TUN${2} ${RADIO} ${RPORT} > /dev/null &
+fi
+
+
+# -------------------------------------------------------------
+
+# Some local presets I put into the channel memory slots
+if [ "$1" == "list" ]
+  then
+    printf '\033[8;42;130t';stty rows 42 cols 130
+
+    echo "1  = 89.5 knhc"
+    echo "2  = 92.5 kqmv"
+    echo "3  = 93.3 kjr"
+    echo "4  = 94.1 kswd"
+    echo "5  = 95.7 kjeb"
+    echo "6  = 96.1 kxxo"
+    echo "7  = 96.5 kjaq"
+    echo "8  = 97.3 kiro"
+    echo "9  = 98.9 knuc"
+    echo "10 = 99.9 kisw"
+    echo "11 = 100.7 kkwf"
+    echo "12 = 101.5 kplz"
+    echo "13 = 102.5 kzok"
+    echo "14 = 103.7 khtp"
+    echo "15 = 104.5 klsw"
+    echo "16 = 105.3 kcms"
+    echo "17 = 106.1 kbks"
+    echo "18 = 106.9 krwm"
+    echo "19 = 107.7 kndd"
+    echo "20 ="
+    echo "21 ="
+    echo "22 ="
+    echo "23 ="
+    echo "24 ="
+    echo "25 ="
+    echo "26 ="
+    echo "27 ="
+    echo "28 = 570 kvi"
+    echo "29 = 710 kiroam"
+    echo "30 = 770 ktth"
+    echo "31 = 850 khho"
+    echo "32 = 1000 knwn"
+    echo "33 = 1090 kptr"
+    echo "34 = 1150 kknw"
+    echo "35 = 1190 1190"
+    echo "36 = 1210 kmia"
+    echo "37 = 1300 kkol"
+    echo "38 = 1330 1330"
+    echo "39 = 1540 kxpa"
+    echo "40 = 1590 klfe"
+  fi
+
+# -------------------------------------------------------------
+
+# Recall preset memory selections
+
+if [ "$1" == "knhc" ]
+  then
+    octl PRS01 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kqmv" ]
+  then
+    octl PRS02 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kjr" ]
+  then
+    octl PRS03 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kswd" ]
+  then
+    octl PRS04 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kjeb" ]
+  then
+    octl PRS05 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kxxo" ]
+  then
+    octl PRS06 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kjaq" ]
+  then
+    octl PRS07 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kiro" ]
+  then
+    octl PRS08 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "knuc" ]
+  then
+    octl PRS09 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kisw" ]
+  then
+    octl PRS0A ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kkwf" ]
+  then
+    octl PRS0B ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kplz" ]
+  then
+    octl PRS0C ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kzok" ]
+  then
+    octl PRS0D ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "khtp" ]
+  then
+    octl PRS0E ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "klsw" ]
+  then
+    octl PRS0F ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kcms" ]
+  then
+    octl PRS10 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kbks" ]
+  then
+    octl PRS11 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "krwm" ]
+  then
+    octl PRS12 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kndd" ]
+  then
+    octl PRS13 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS14 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS15 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS16 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS17 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS18 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS19 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS1A ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "XXXX" ]
+  then
+    octl PRS1B ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+# AM 28 570
+if [ "$1" == "kvi" ]
+  then
+    octl PRS1C ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kiroam" ]
+  then
+    octl PRS1D ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "ktth" ]
+  then
+    octl PRS1E ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "khho" ]
+  then
+    octl PRS1F ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "knwn" ]
+  then
+    octl PRS20 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kptr" ]
+  then
+    octl PRS21 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kknw" ]
+  then
+    octl PRS22 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "1190" ]
+  then
+    octl PRS23 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kmia" ]
+  then
+    octl PRS24 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kkol" ]
+  then
+    octl PRS25 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "1330" ]
+  then
+    octl PRS26 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "kxpa" ]
+  then
+    octl PRS27 ${RADIO} ${RPORT} > /dev/null &
+  fi
+
+if [ "$1" == "klfe" ]
+  then
+    octl PRS28 ${RADIO} ${RPORT} > /dev/null &
+  fi
